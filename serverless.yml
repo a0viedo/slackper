@@ -1,0 +1,58 @@
+service: slackper
+
+provider:
+  name: aws
+  stage: ${opt:stage, env:NODE_ENV, "dev"}
+  runtime: nodejs8.10
+  environment: ${file(./config/env.${self:provider.stage}.yml)}
+  memorySize: 256
+  timeout: 120
+  region: us-east-1
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-iam-roles-per-function
+
+functions:
+  backup-channel:
+    handler: functions/backup-channel.handler
+    events:
+      - sqs: arn:aws:sqs:${opt:region, self:provider.region}:#{AWS::AccountId}:${self:provider.environment.AWS_SQS}
+    layers:
+      - arn:aws:lambda:${opt:region, self:provider.region}:#{AWS::AccountId}:layer:git:1
+    iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: arn:aws:sqs:${opt:region, self:provider.region}:#{AWS::AccountId}:${self:provider.environment.AWS_SQS}
+    - Effect: Allow
+      Action:
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+      Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:#{AWS::AccountId}:table/${self:provider.environment.AWS_DYNAMODB_TABLE}
+
+    # onError: arn:aws:sns:*:${self:provider.environment.DLQ}
+  trigger-backup:
+    handler: functions/trigger.handler
+    events:
+      - schedule: cron(0 4 ? * * *) # every day at 4am
+    iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: arn:aws:sqs:${opt:region, self:provider.region}:#{AWS::AccountId}:${self:provider.environment.AWS_SQS}
+
+  # get-replies:
+  #   handler: functions/get-replies.handler
+  #   events:
+  #     - http:
+  #         path: get-replies
+  #         method: get
+  
+  # get-messages:
+  #   handler: functions/get-messages.handler
+  #   events:
+  #     - http:
+  #         path: get-messages
+  #         method: get
