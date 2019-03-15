@@ -50,9 +50,14 @@ module.exports.handler = async function (event, context) {
       console.log('is going to take more than one request to get all the data');
       const nextLatest = lastMessage.ts;
 
-      console.log(`scheduling an SQS message for next invocation with latest ${nextLatest}`);
+      const snsMessage = { latest: nextLatest, };
+      if(triggerMessage.startOfDay) {
+        snsMessage.startOfDay = triggerMessage.startOfDay;
+      }
+
+      console.log(`scheduling an SQS message for next invocation with: ${snsMessage}`);
       const params = {
-        MessageBody: JSON.stringify({ latest: nextLatest, }),
+        MessageBody: JSON.stringify(snsMessage),
         QueueUrl: process.env.AWS_SQS_URL
       };
       await sendSQSMessage(params);
@@ -68,7 +73,7 @@ module.exports.handler = async function (event, context) {
 
       // append the messages we just requested
       messagesFromDB.push(...formattedMessages.map(messageObjToText));
-      console.log(messagesFromDB);
+      // console.log(messagesFromDB);
       // slack API returns latest messages first so we reverse the array to have them in chronological order
       console.log('writing messages file to disk');
       await writeFile(fileName, new Buffer(messagesFromDB.reverse().join('')));
