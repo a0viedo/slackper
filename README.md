@@ -4,6 +4,9 @@ A set of functions that backups your Slack channels
 
 It uses SQS to backpressure Slack's API (it has a [rate limit](https://api.slack.com/docs/rate-limits)) and stores the data in DynamoDB. It can also push the message history to Git so that text is searcheable through GitHub's search feature.
 
+## Overview
+![](diagram.png)
+
 ## Deployment
 You will need a YAML configuration file under the "config" directory with the following:
 
