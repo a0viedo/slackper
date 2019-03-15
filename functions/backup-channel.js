@@ -55,7 +55,7 @@ module.exports.handler = async function (event, context) {
         snsMessage.startOfDay = triggerMessage.startOfDay;
       }
 
-      console.log(`scheduling an SQS message for next invocation with: ${snsMessage}`);
+      console.log('scheduling an SQS message for next invocation with:', snsMessage);
       const params = {
         MessageBody: JSON.stringify(snsMessage),
         QueueUrl: process.env.AWS_SQS_URL
