@@ -73,12 +73,15 @@ module.exports.handler = async function (event, context) {
 
       // append the messages we just requested
       messagesFromDB.push(...formattedMessages.map(messageObjToText));
-      // console.log(messagesFromDB);
+
       // slack API returns latest messages first so we reverse the array to have them in chronological order
       console.log('writing messages file to disk');
       await writeFile(fileName, new Buffer(messagesFromDB.reverse().join('')));
-      console.log('pushing the file to github');
-      await saveFileToGitHub(fileName, `${repoDirectory}/${REPO_SUB_DIRECTORY}`, formattedDate, gitParams, repoDirectory);
+
+      if(process.env.GITHUB_REMOTE) {
+        console.log('pushing the file to github');
+        await saveFileToGitHub(fileName, `${repoDirectory}/${REPO_SUB_DIRECTORY}`, formattedDate, gitParams, repoDirectory);
+      }
     }
   } catch (err) {
     console.log('there was an error', err);
