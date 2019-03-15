@@ -13,7 +13,10 @@ You will need a YAML configuration file under the "config" directory with the fo
 | Variable name | Variable value | Required |
 |:-:|:-:|:-:|
 | SLACK_TOKEN | a token you can get [here](https://api.slack.com/custom-integrations/legacy-tokens) | true |
-| SLACK_CHANNEL | the channel name | true |
+| SLACK_CHANNEL | Slack's channel id | true |
+| SLACK_CHANNEL_NAME | Slack's channel name | true |
+| SLACK_API_URL | the URL for Slack's API e.g `https://slack.com/api/` | true |
+| SLACK_TEAM | the name of your team | true |
 | AWS_DYNAMODB_TABLE | the name of your DynamoDB table | true |
 | AWS_SQS | the name of your SQS | true |
 | AWS_SQS_URL | the URL of your SQS | true |
