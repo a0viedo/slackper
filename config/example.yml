@@ -1,0 +1,12 @@
+SLACK_TOKEN: "11111111"
+SLACK_CHANNEL: "slackId"
+SLACK_API_URL: "https://slack.com/api/"
+GITHUB_REMOTE: "https://you-might-want-to:use-a-dedicated-user-for-this@github.com/user/repoName.git"
+AWS_SQS_URL: "https://sqs.us-east-1.amazonaws.com/something/something"
+AWS_DYNAMODB_TABLE: "aTableName"
+SLACK_TEAM: "aSlackTeam"
+SLACK_CHANNEL_NAME: "aSlackChannel"
+GITHUB_USER_EMAIL: "email-for-the-github-user" #so that it can be displayed properly on GitHub's UI
+GITHUB_USER: "githubUserName"
+HOME: "/tmp"
+AWS_SQS: "sqsName"

@@ -87,3 +87,4 @@ config/*
 
 # keep serverless configuration folder
 !config/.gitkeep
+!config/example.yml
