@@ -4,7 +4,7 @@ provider:
   name: aws
   stage: ${opt:stage, env:NODE_ENV, "dev"}
   runtime: nodejs8.10
-  environment: ${file(./config/env.${self:provider.stage}.yml)}
+  environment: ${file(./config/${self:provider.stage}.yml)}
   memorySize: 256
   timeout: 120
   region: us-east-1
