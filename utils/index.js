@@ -13,18 +13,8 @@ module.exports.getMessagesFromDatabase = async function getMessagesFromDatabase(
     },
   };
 
-  return new Promise((resolve, reject) => {
-    // fetch from the database
-    dynamoDb.get(params, (err, result) => {
-      if(err) {
-        return reject(err);
-      }
-      if(!result || !result.Item) {
-        return resolve([]);
-      }
-      return resolve(result.Item.messages);
-    });
-  });
+  const result = await dynamoDb.get(params).promise();
+  return (!result || !result.Item) ? [] : result.Item.messages;
 };
 
 module.exports.saveToDatabase = async function saveToDatabase({ date, messages }){
@@ -44,14 +34,7 @@ module.exports.saveToDatabase = async function saveToDatabase({ date, messages }
     }
   };
 
-  return new Promise((resolve, reject) => {
-    dynamoDb.update(params, (err) => {
-      if(err) {
-        return reject(err);
-      }
-      return resolve();
-    });
-  });
+  await dynamoDb.update(params).promise();
 };
 
 module.exports.setItemAsCompleted = async function setItemAsCompleted(date) {
@@ -67,14 +50,7 @@ module.exports.setItemAsCompleted = async function setItemAsCompleted(date) {
     }
   };
 
-  return new Promise((resolve, reject) => {
-    dynamoDb.update(params, (err) => {
-      if(err) {
-        return reject(err);
-      }
-      return resolve();
-    });
-  });
+  await dynamoDb.update(params).promise();
 };
 
 module.exports.saveFileToGitHub = async function saveFileToGitHub(filePath, repoDirectory, date, gitParams, temporaryDirectory) {
@@ -99,15 +75,7 @@ module.exports.saveFileToGitHub = async function saveFileToGitHub(filePath, repo
 };
 
 module.exports.sendSQSMessage = async function sendSQSMessage(params) {
-  return new Promise((resolve, reject) => {
-    sqs.sendMessage(params, (err) => {
-      if(err) {
-        console.log(err);
-        return reject(err);
-      }
-      return resolve();
-    });
-  });
+  await sqs.sendMessage(params).promise();
 };
 
 async function gitClone(temporaryDirectory) {
