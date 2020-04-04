@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "serverless": "^1.67.0",
-    "serverless-iam-roles-per-function": "^1.0.4",
+    "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-pseudo-parameters": "^2.4.0"
   }
 }
